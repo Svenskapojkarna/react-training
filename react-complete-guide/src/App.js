@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Person from './Person/Person';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 
 class App extends React.Component {
   constructor(){
@@ -41,27 +42,37 @@ class App extends React.Component {
   }
   render(){
     let persons = null
+    let btnClass = ''
+
+    let classes = []
+
+    if(this.state.persons.length <= 2){
+      classes.push('red')
+    }
+    if(this.state.persons.length <= 1){
+      classes.push('bold')
+    }
 
     if(this.state.showPersons){
       persons = (
         <div>
           {this.state.persons.map((person, index) => {
-          return <Person 
+          return <ErrorBoundary key={person.id}><Person 
                   name={person.name} 
                   age={person.age} 
                   click={() => this.deletePersonHandler(index)} 
-                  key={person.id}
-                  changed={event => this.nameChangeHandler(event, person.id)}/>
+                  changed={event => this.nameChangeHandler(event, person.id)}/></ErrorBoundary>
           })}
         </div>
       )
+      btnClass = 'red'
     }
 
     return(
       <div className="App">
         <h1>Hello, I'm react app.</h1>
-        <p>This is really working.</p>
-        <button className="Switchbutton" onClick={this.togglePersonsHandler}>Switch name</button>
+        <p className={classes.join(' ')}>This is really working.</p>
+        <button className={btnClass} onClick={this.togglePersonsHandler}>Switch name</button>
         {persons}
       </div>
     )
